@@ -13,7 +13,7 @@ export default function handler(
   res.status(200).json({ name: 'John Doe' })
 }
 
-const baseURL = "http://192.168.1.19:5000"
+const baseURL = process.env.BASE_URL
 
 const API = axios.create({ baseURL: baseURL });
 
