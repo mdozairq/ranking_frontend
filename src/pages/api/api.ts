@@ -17,5 +17,6 @@ const baseURL = process.env.BASE_URL
 
 const API = axios.create({ baseURL: baseURL });
 
-export const getCollegeRank = (reg_no: string, college_code: string) =>  API.get(`/${reg_no}?college=${college_code}`);
-export const getBranchRank = (reg_no: string, college_code: string, branch_code: string) =>  API.get(`/${reg_no}?college=${college_code}&branch=${branch_code}`);
+export const getCollegeRank = (reg_no: string, college_code: string) =>  API.get(`/rank/${reg_no}?college=${college_code}`);
+export const getBranchRank = (reg_no: string, college_code: string, branch_code: string) =>  API.get(`/rank/${reg_no}?college=${college_code}&branch=${branch_code}`);
+export const getAllColleges = () => API.get(`/college`);

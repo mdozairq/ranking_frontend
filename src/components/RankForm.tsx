@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Select, message } from 'antd';
 import type { FormItemProps } from 'antd';
 import DialogCard from './DialogCard';
-import { getBranchRank, getCollegeRank } from '@/pages/api/api';
+import { getAllColleges, getBranchRank, getCollegeRank } from '@/pages/api/api';
+
 
 const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
@@ -30,10 +31,44 @@ const MyFormItem = ({ name, ...props }: FormItemProps) => {
 };
 
 const RankForm: React.FC = () => {
+  const { Option } = Select
   const [messageApi, contextHolder] = message.useMessage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [student, setStudent] = useState({});
+  const [colleges, setColleges] = useState([]);
   const key = 'updatable';
+  const [selectedGroup, setSelectedGroup] = useState(110);
+  const [innerOptions, setInnerOptions] = useState([]);
+
+  const handleOuterSelect = (value: any) => {
+    setSelectedGroup(value);
+    const selectedData: any = colleges && colleges?.find((item: any) => {
+      console.log(item)
+      return item?.college_code === value
+    });
+    setInnerOptions(selectedData?.branch);
+  };
+
+  const collegeList = async () => {
+    let res;
+    try {
+      res = await getAllColleges()
+    } catch (err: any) {
+      messageApi.open({
+        type: 'error',
+        content: err.response && err.response.data.message || "Server Error",
+      });
+      console.log(err)
+    }
+    setColleges(res?.data);
+  }
+
+  useEffect(() => {
+    if (!colleges.length) {
+      collegeList();
+      setSelectedGroup(110);
+    }
+  }, [])
 
   const onFinish = async (value: { college: string, branch: string, reg_no: string }) => {
     let res: any;
@@ -104,26 +139,19 @@ const RankForm: React.FC = () => {
         name="form_item_path"
         layout="vertical"
         onFinish={onFinish}
-        initialValues={{ college: '110', branch: "105", }}
+        initialValues={{ college: null, branch: 'NA' }}
       >
         <MyFormItemGroup prefix={[]}>
           <MyFormItem name="college" label="Select your college: " style={{ fontWeight: 500 }}>
-            <Select
-              options={[
-                { value: '110', label: 'Gaya College of Engineering, Gaya' }
-              ]}
-            />
+            <Select onChange={handleOuterSelect}>
+              {colleges && [].concat(...colleges).map((l: any) => <Option value={l?.college_code} key={l?.college_code}>{l?.college_name}</Option>)}
+            </Select>
           </MyFormItem>
           <MyFormItem name="branch" label="Select your branch: " style={{ fontWeight: 500 }}>
-            <Select
-              options={[
-                { value: 'NA', label: '--- Not Selected ---' },
-                { value: '105', label: 'Computer Science and Engineering' },
-                { value: '110', label: 'Electrical and Electronics Engineering' },
-                { value: '102', label: 'Mechanical Engineering' },
-                { value: '101', label: 'Civil Engineering' },
-              ]}
-            />
+            <Select>
+              <Option value={"NA"}>{"--- Not Selected ---"}</Option>
+              {innerOptions && [].concat(...innerOptions).map((l: any) => <Option value={l?.branch_code} key={l?.branch_code}>{l?.branch_name}</Option>)}
+            </Select>
           </MyFormItem>
           <MyFormItem name="reg_no" label="# Enter Your Registration No: " style={{ fontWeight: 500 }} required>
             <Input />

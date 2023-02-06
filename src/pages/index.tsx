@@ -30,7 +30,8 @@ const contentStyle: React.CSSProperties = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  flexDirection: "column"
+  flexDirection: "column",
+  overflowY: "scroll"
 };
 
 const footerStyle: React.CSSProperties = {
@@ -41,17 +42,18 @@ const footerStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  flexDirection:"column"
+  flexDirection: "column"
 };
 
 const Home: React.FC = () => (
-  <div  style={{ width: '100%' }}>
+  <div style={{ width: '100%' }}>
     <Layout>
       <Header style={headerStyle}>
         <h2>Your Rankers</h2>
       </Header>
       <Content style={contentStyle}>
-        <div style={{
+        <div 
+        style={{
           margin: 24,
           padding: 20,
           background: "#fff",
@@ -61,12 +63,12 @@ const Home: React.FC = () => (
           justifyItems: "left"
         }}>
           <Dropdown menu={{ items }}>
-          <Space style={{background:"#81BEE0", borderRadius:"5px", padding:"6px"}}>
-            Batch 2019, 6th Semester
-            <DownOutlined />
-          </Space>
-        </Dropdown>
-        <hr/>
+            <Space style={{ background: "#81BEE0", borderRadius: "5px", padding: "6px" }}>
+              Batch 2019, 6th Semester
+              <DownOutlined />
+            </Space>
+          </Dropdown>
+          <hr />
           <RankForm />
         </div>
         <Alert
@@ -77,7 +79,7 @@ const Home: React.FC = () => (
       </Content>
       <Footer style={footerStyle}>
         <p>{"Developed by Ozair"} | <a href='https://www.linkedin.com/in/md-ozair-qayam-6265b9178/'>LinkedIn</a></p>
-        </Footer>
+      </Footer>
     </Layout>
   </div>
 );
