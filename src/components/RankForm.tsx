@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Select, message } from 'antd';
 import type { FormItemProps } from 'antd';
 import DialogCard from './DialogCard';
-import { getAllColleges, getBranchRank, getCollegeRank } from '@/pages/api/api';
+import { getAllColleges, getBranchRank, getBranchRankerList, getCollegeRank, getCollegeRankerList } from '@/pages/api/api';
 
 
 const MyFormItemContext = React.createContext<(string | number)[]>([]);
+
+interface Props {
+  setData: any
+}
 
 interface MyFormItemGroupProps {
   prefix: string | number | (string | number)[];
@@ -30,7 +34,7 @@ const MyFormItem = ({ name, ...props }: FormItemProps) => {
   return <Form.Item name={concatName} {...props} />;
 };
 
-const RankForm: React.FC = () => {
+const RankForm: React.FC<Props> = ({setData}: Props) => {
   const { Option } = Select
   const [messageApi, contextHolder] = message.useMessage();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,11 +75,12 @@ const RankForm: React.FC = () => {
   }, [])
 
   const onFinish = async (value: { college: string, branch: string, reg_no: string }) => {
-    let res: any;
+    let res: any, ranker_res: any;
     if (value.reg_no !== undefined && value.reg_no.length === 11) {
       if (value.branch && value.branch !== "NA") {
         try {
           res = await getBranchRank(value.reg_no, value.college, value.branch)
+          ranker_res = await getBranchRankerList(value.college, value.branch)
         } catch (err: any) {
           messageApi.open({
             type: 'error',
@@ -87,6 +92,7 @@ const RankForm: React.FC = () => {
       else {
         try {
           res = await getCollegeRank(value.reg_no, value.college)
+          ranker_res = await getCollegeRankerList(value.college)
         } catch (err: any) {
           messageApi.open({
             type: 'error',
@@ -95,8 +101,9 @@ const RankForm: React.FC = () => {
           console.log(err)
         }
       }
-      if (res && res.data) {
+      if (res && ranker_res && res.data) {
         setStudent(res.data);
+        setData(ranker_res?.data)
         messageApi.open({
           key,
           type: 'loading',
@@ -111,6 +118,22 @@ const RankForm: React.FC = () => {
           });
         }, 1000);
         setIsModalOpen(true)
+      }
+      if (ranker_res && ranker_res.data) {
+        setData(ranker_res?.data)
+        messageApi.open({
+          key,
+          type: 'loading',
+          content: 'Loading...',
+        });
+        setTimeout(() => {
+          messageApi.open({
+            key,
+            type: 'success',
+            content: 'Loaded!',
+            duration: 2,
+          });
+        }, 1000);
       }
       console.log(value, res && res.data);
     }

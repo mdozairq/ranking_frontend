@@ -20,3 +20,5 @@ const API = axios.create({ baseURL: baseURL });
 export const getCollegeRank = (reg_no: string, college_code: string) =>  API.get(`/rank/${reg_no}?college=${college_code}`);
 export const getBranchRank = (reg_no: string, college_code: string, branch_code: string) =>  API.get(`/rank/${reg_no}?college=${college_code}&branch=${branch_code}`);
 export const getAllColleges = () => API.get(`/college`);
+export const getCollegeRankerList = (college_code: string) => API.get(`/list?college=${college_code}`);
+export const getBranchRankerList = (college_code: string, branch_code: string) => API.get(`/list?college=${college_code}&branch=${branch_code}`);
