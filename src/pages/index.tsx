@@ -58,7 +58,7 @@ const Home: React.FC = () => {
         </Header>
         <Content style={contentStyle}>
           <Row>
-            <Col xs={24} xl={8} style={{ alignContent: "center", justifyContent: 'center', justifyItems: 'center' }}>
+            <Col xs={24} xl={8} style={{ alignContent: "center", justifyContent: 'center', justifyItems: 'center', display:"flex" }}>
               <div
                 style={{
                   margin: 24,

@@ -64,7 +64,8 @@ const RankTable: React.FC<Props> = ({data}: Props) => {
 
   return (
     <>
-      <Table columns={columns} dataSource={filteredData} />
+      <h2 style={{color:"#000", fontFamily:"serif"}}>TOP 10 RANKERS</h2>
+      <Table columns={columns} dataSource={filteredData} style={{width:"auto"}} />
     </>
   );
 };

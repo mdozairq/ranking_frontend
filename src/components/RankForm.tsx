@@ -80,6 +80,14 @@ const RankForm: React.FC<Props> = ({setData}: Props) => {
       if (value.branch && value.branch !== "NA") {
         try {
           res = await getBranchRank(value.reg_no, value.college, value.branch)
+        } catch (err: any) {
+          messageApi.open({
+            type: 'error',
+            content: err.response && err.response.data.message || "Server Error",
+          });
+          console.log(err)
+        }
+        try {
           ranker_res = await getBranchRankerList(value.college, value.branch)
         } catch (err: any) {
           messageApi.open({
@@ -92,6 +100,14 @@ const RankForm: React.FC<Props> = ({setData}: Props) => {
       else {
         try {
           res = await getCollegeRank(value.reg_no, value.college)
+        } catch (err: any) {
+          messageApi.open({
+            type: 'error',
+            content: err.response && err.response.data.message || "Server Error",
+          });
+          console.log(err)
+        }
+        try {
           ranker_res = await getCollegeRankerList(value.college)
         } catch (err: any) {
           messageApi.open({
